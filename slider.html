@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+    body {
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        margin: 0px;
+        font-size: 12px;
+		background-color: lightblue;
+    }
+	td {
+		padding-bottom: 2em;
+	}
+	label {
+		font-weight: bold;
+	}
+	#interest span  {
+		line-height: 2em;
+	}
+</style>
+<script type="text/javascript">
+"use strict";
+
+    var meterReading, interest;
+
+    document.addEventListener("DOMContentLoaded", isDOMIsGood);
+
+function isDOMIsGood(e) {
+    window.addEventListener("load", load);
+	
+    meterReading = document.getElementById("meterReading");
+    interest     = document.getElementById("interest");
+
+    meterReading.addEventListener('change', meterReadingChanged);
+    meterReading.addEventListener('input', meterReadingChanged);
+}
+function load() {
+}
+function meterReadingChanged(e) {
+    console.log("meter reading changed");
+}
+</script>
+
+<script src="slider.js" type="application/javascript" defer></script>
+</head>
+<body>
+	<h1>Simple HTML Components /  Custom Elements Demo</h1>
+        <div id="container">
+            <table id="sliderTable">
+                <tr>
+                    <td>
+                        <label for="meterReading">Meter&nbsp;Reading</label>
+                    </td>
+                    <td>
+                        <abc-slider id="meterReading" max="100" value="50" step="10" min="0">
+                            <span slot="twixtWater" style="color: black; font-style: italic; ">${this.value}&percnt; is between ${this.min} and ${this.max}</span>
+                        </abc-slider>
+                    </td>
+				</tr>
+				<tr>
+					<td style="vertical-align: text-top;">
+                        <label for="interest">CreditCard&nbsp;Interest</label>
+                    </td>
+                    <td>
+                        <abc-slider id="interest" max="30" value="0" step="5" min="0" statusposition="bottom">
+                            <span slot="lowWater" style="color: black;">We won't make money on this</span>
+                            <span slot="twixtWater" style="color: black; font-style: italic; ">Interest Rate of ${this.value}&percnt; applied</span>
+                            <span slot="highWater" style="color: black;">Maximum</span>
+                        </abc-slider>
+                    </td>
+                </tr>
+            </table>
+        </div>
+</body>
+</html>
