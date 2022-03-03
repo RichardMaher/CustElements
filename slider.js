@@ -10,7 +10,9 @@ class ABCSlider extends HTMLElement {
         const holder = document.createElement('div');
         const statusPosition = "statusposition";
         const _base = document.createElement('input');
+
         _base.setAttribute('type', 'range');
+        _base.setAttribute('part', 'slider');
 
         let _positionStatus = "right";
         if (this.hasAttribute(statusPosition)) 
