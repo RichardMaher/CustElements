@@ -105,7 +105,7 @@ class ABCSlider extends HTMLElement {
             input[type='range']::-webkit-slider-thumb {
                 -webkit-appearance: none !important;
                 border-radius: 1.75em;
-                background-color: #00bf00;
+                background-color: var(--slider-thumb-cold, #00bf00);
                 box-shadow:inset 0 0 1.0em rgba(000,000,000,0.5);
                 border: 1px solid #217812;
                 height: 1.5em;

@@ -4,7 +4,6 @@
 <style type="text/css">
     :root {
         --slider-track: white;
-        --slider-thumb-cold: #0cd;
     }
     body {
         min-width: 100%;
@@ -27,11 +26,14 @@
     abc-slider::part(slider) {
         background-color: var(--slider-track);
     }
-    #interest::part(slider)::-webkit-slider-thumb {
-        background-color: var(--slider-thumb-cold);
+    abc-slider::part(slider)::-moz-range-track {
+        background-color: var(--slider-track);
     }
     #interest::part(slider)::-moz-range-thumb {
-        background-color: var(--slider-thumb-cold);
+        background-color: #0cd;
+    }
+    #interest {
+        --slider-thumb-cold: #0cd;
     }
 </style>
 <script type="text/javascript">
