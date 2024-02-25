@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+
+	html,
+	body {
+		height: 100%;
+		width: 100%;
+	}
+    body {
+		display: flex;
+        flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+        margin: 0px;
+        font-size: 12px;
+		background-color: lightblue;
+        overscroll-behavior: none;
+        pointer-events: auto;
+	}	
+	#container {
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		order: 2;
+		height: 50%;
+		width: 50%;
+		min-height: 0px;
+		font-size: 5em;
+	}
+	#myToggle {
+		display: flex;
+		align-self: center;
+		color: gray;
+		--toggle-bg-color: #ccc;
+		--toggle-fg-color: #fff;
+		--toggle-highlight-color: #2099f4;
+		cursor: pointer;
+	}
+	#myToggle[checked="true"] {
+		--toggle-bg-color: #2099f4;
+	}
+	#myToggle[disabled="true"] {
+		opacity: .6;
+		cursor: not-allowed;
+		--toggle-highlight-color: rgba(0,0,0,0);
+	}	
+	#myToggle::part(label):after 
+	{
+		font: 0.7em/2.0em Helvetica;
+        top: 0.5em;
+		z-index: 1;
+		position: absolute;
+		font-weight: bold;
+		content: 'OFF';
+		color: #476b6b;
+		right: 0.6em;
+		text-shadow: 1px 1px 0px rgba(255,255,255,.15);
+	}
+	#myToggle::part(label):before 
+	{
+		font: 0.7em/2.0em Helvetica;
+        top: 0.5em;
+		z-index: 1;
+		position: absolute;
+		font-weight: bold;
+		content: 'ON';
+		color: #00bf00;
+		left: 0.6em;
+	}
+	h1 {
+		display: flex;
+		order: 1;
+		width: 100%;
+	}	
+	#disableIt {
+		font-size: 2em;
+		display: flex;
+		order: 3;
+	}	
+	#clickStatus {
+		font-size: 2em;
+		display: flex;
+		order: 4;
+	}
+	
+	@media (prefers-reduced-motion: reduce) {
+		:root {
+			--reduce-motion: 0s;
+		}
+	}
+	
+</style>
+<script type="module">
+
+	import { ABCToggle } from "./toggle.js"
+
+    document.addEventListener("DOMContentLoaded", (e) => {
+				let myToggle = document.getElementById("myToggle");
+				let clickCountMsg = document.getElementById("clickCount");
+				let clickCount = 0;
+				myToggle.addEventListener('click', (e) => {
+								console.log("been checked " + myToggle.checked + " " + e.target.tagName);
+								clickCountMsg.innerText = "Toggle has been clicked " + ++clickCount + " times";
+							})
+					
+				document.getElementById("disableToggle").addEventListener("click", (e) => {
+								var closureToggle = myToggle;
+								if (e.target.checked)
+									closureToggle.disabled=true;
+								else
+									closureToggle.disabled=false;
+									
+								closureToggle.blur();
+							});
+			});
+
+</script>
+<script type="application/javascript">
+			
+	function load() {
+		console.log("in load");
+		var x = document.getElementById("myToggle");
+		console.log(x.checked);
+		x.checked = false;
+	}
+	
+</script>
+</head>
+<body onload="load()">
+	<h1>Toggle Web Component Demo</h1>
+	<div id="container">
+		<abc-toggle id="myToggle" checked="true"></abc-toggle>
+	</div>
+	<div id="disableIt">
+		<label for="disableToggle">Disable Toggle</label>
+		<input type="checkbox" id="disableToggle" />
+	</div>
+	<div id="clickStatus">
+		<span id="clickCount">Toggle has been clicked 0 times</span>
+	</div>
+</body>
+</html>
