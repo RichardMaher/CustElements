@@ -1,4 +1,4 @@
-import sheet from '/Toggle/toggle.css' assert {type: 'css'};
+import sheet from './toggle.css' assert {type: 'css'};
 
 export class ABCToggle extends HTMLElement 
 {
