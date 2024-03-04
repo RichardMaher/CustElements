@@ -14,7 +14,7 @@ export class ABCToggle extends HTMLElement
     constructor() {
         super();
 
-        this.#shadowRoot = this.attachShadow({ mode: 'open' });
+        this.#shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
 		this.#shadowRoot.adoptedStyleSheets = [sheet];	
 		this.#internals = this.attachInternals();
 		this.#internals.ariaRole = "checkbox";
@@ -73,6 +73,17 @@ export class ABCToggle extends HTMLElement
 		}
 		
 		this.setAttribute("aria-disabled", this.#checkbox.disabled);
+		
+		let value = "";
+		if (this.hasAttribute("value")) 
+		{
+			value = this.getAttribute("value");
+		}
+		else
+		{
+			this.setAttribute("value", "");
+		}
+		this.#internals.setFormValue(value);
 									
 		this.#toggle.addEventListener('keydown', (e) => {
 			if (e.altKey || e.ctrlKey || e.isComposing || e.metaKey || e.shiftKey)
@@ -83,7 +94,6 @@ export class ABCToggle extends HTMLElement
 				e.preventDefault();
 			}
 		});
-
 		
 		this.#toggle.addEventListener('keyup', (e) => {
 				if (e.altKey || e.ctrlKey || e.isComposing || e.metaKey || e.shiftKey)
@@ -205,6 +215,13 @@ export class ABCToggle extends HTMLElement
 		this.#checkbox.disabled = (String(newValue).toLowerCase() === "true");
         this.setAttribute("disabled", this.#checkbox.disabled);
         this.setAttribute("aria-disabled", this.#checkbox.disabled);
+    }
+
+    get value() {
+        return this.getAttribute("value");
+    }
+    set value(newValue) {
+        this.setAttribute("value", newValue);
     }
 }
 customElements.define('abc-toggle', ABCToggle);

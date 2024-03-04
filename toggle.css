@@ -89,12 +89,12 @@ input:hover + .endo.toggle,
 input:focus + .endo.toggle {
   box-shadow: 0 0 0.2em var(--toggle-highlight-color, rgba(0,0,0,0));
 }
-/*
+
 input:hover + .endo.tick,
 input:focus + .endo.tick {
   box-shadow: 0 0 0.5em var(--toggle-highlight-color, rgba(0,0,0,0)); 
 }
-*/
+
 input[type=checkbox]:checked + .endo.toggle:after {
   transform: translateX(1.9em);
 }

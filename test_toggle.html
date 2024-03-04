@@ -87,6 +87,10 @@
 	#disTick::part(endo):focus {
 		box-shadow: 0 0 0.2em black;
 	}
+	#disTick:focus {
+		outline: none;
+		box-shadow: 0 0 0.2em black;
+	}
 	#myToggle[disabled="true"] {
 		opacity: .6;
 		cursor: not-allowed;
@@ -155,7 +159,9 @@
 <body onload="load()">
 	<h1>Toggle Web Component Demo</h1>
 	<div id="container">
-		<abc-toggle id="myToggle" name="myToggle" checked="true" tabindex=0 type="toggle" aria-label="useless toggle"></abc-toggle>
+		<abc-toggle id="myToggle" name="myToggle" checked="true" tabindex=0 
+					type="toggle" aria-label="useless toggle" value="payload">
+		</abc-toggle>
 	</div>
 	<div id="disableIt">
 		<label for="disTick">Disable Toggle&nbsp;</label>
