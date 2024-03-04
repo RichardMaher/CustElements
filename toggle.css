@@ -1,37 +1,67 @@
-
-.switch {
-  --switch-z-index;
-  position: relative;
-  display: inline-block;
-  width: 4em;
-  height: 2em;
-  cursor: inherit;
-} 
-
-:host() {
+:host([disabled="false"]) {
+  --ponter-events: auto;
 }
 
-.switch input { 
+:host([disabled="true"]) {
+  --pointer-events: none;
+}
+
+.exo {
+  --switch-z-index;
+  position: relative;
+  display: inline-flex;
+  cursor: inherit;
+  user-select: none;
+} 
+
+.exo input { 
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.slider {
+.exo.toggle {
+  width: 4em;
+  height: 2em;
+}
+
+.exo.tick {
+  width: 1.3em;
+  height: 1.3em;
+  border-radius: 0.65em;
+}
+
+.endo {
   position: absolute;
   cursor: inherit;
+  pointer-events: var(--pointer-events);
+}
+
+.endo.toggle {
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: var(--toggle-bg-color, var(--default-toggle-bg-color), #000);
   border-radius: 2em;
-  cursor: inherit;
 }
 
-.slider:before {
+.endo.tick
+{
+  width: 1.1em;
+  height: 1.1em;
+  left: 0.12em;
+  top: 0.12em;
+  border-radius: 0.55em;
+}
+
+.endo:after {
   position: absolute;
   content: "";
+  cursor: inherit;
+}
+ 
+.endo.toggle:after {
   height: 1.6em;
   width: 1.6em;
   left: 0.2em;
@@ -40,15 +70,36 @@
   transition: var(--reduce-motion, .4s);
   border-radius: 50%;
   z-index: var(--switch-z-index);
-  cursor: inherit;
 }
 
-input:hover + .slider,
-input:focus + .slider {
+.tick:after{
+  background: transparent;
+  width: 0.5em;
+  height: 0.2em;
+  opacity: 0;
+  top: 0.325em;
+  left: 0.25em;
+  border: 0.15em solid var(--toggle-fg-color, var(--default-toggle-fg-color), #fff);
+  border-top: none;
+  border-right: none;
+  transform: rotate(-45deg);
+}
+
+input:hover + .endo.toggle,
+input:focus + .endo.toggle {
   box-shadow: 0 0 0.2em var(--toggle-highlight-color, rgba(0,0,0,0));
 }
-
-input:checked + .slider:before {
+/*
+input:hover + .endo.tick,
+input:focus + .endo.tick {
+  box-shadow: 0 0 0.5em var(--toggle-highlight-color, rgba(0,0,0,0)); 
+}
+*/
+input[type=checkbox]:checked + .endo.toggle:after {
   transform: translateX(1.9em);
+}
+
+input[type=checkbox]:checked + .endo.tick:after  {
+  opacity: 1.0;
 }
 
