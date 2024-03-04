@@ -10,7 +10,6 @@ export class ABCToggle extends HTMLElement
 	#checkbox;
 	#initialState;
 	#typeClass;
-	#checkedEvent;
 	
     constructor() {
         super();
@@ -74,11 +73,6 @@ export class ABCToggle extends HTMLElement
 		}
 		
 		this.setAttribute("aria-disabled", this.#checkbox.disabled);
-		
-        this.#checkedEvent = new Event("click", {
-        							bubbles: true,
-                                    cancelable: true,
-                                    composed: true});
 									
 		this.#toggle.addEventListener('keydown', (e) => {
 			if (e.altKey || e.ctrlKey || e.isComposing || e.metaKey || e.shiftKey)
@@ -99,7 +93,7 @@ export class ABCToggle extends HTMLElement
 				{
 					console.log("key = " + e.keyCode);
 					e.preventDefault();
-					this.#toggle.dispatchEvent(this.#checkedEvent);	
+					this.#toggle.click();	
 				}
 			});
 		
@@ -107,14 +101,10 @@ export class ABCToggle extends HTMLElement
 				console.log("Inside " + this.#checkbox.checked + " " + e.target.tagName);
 
 				if (e.target.tagName == "LABEL") {
-					if (e.isTrusted) {
-						e.stopPropagation();
-						return;
-					}
-					else {
-						this.#checkbox.checked = !this.#checkbox.checked;
-					}
+					e.stopPropagation();
+					return;
 				}
+
 				this.setAttribute("checked", this.#checkbox.checked);
 				this.setAttribute("aria-checked", this.#checkbox.checked);
 			})
