@@ -1,4 +1,4 @@
-import sheet from './toggle.css' assert {type: 'css'};
+// import sheet from './toggle.css' assert {type: 'css'};
 
 export class ABCToggle extends HTMLElement 
 {
@@ -15,9 +15,15 @@ export class ABCToggle extends HTMLElement
         super();
 
         this.#shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
-		this.#shadowRoot.adoptedStyleSheets = [sheet];	
+//		this.#shadowRoot.adoptedStyleSheets = [sheet];	
 		this.#internals = this.attachInternals();
 		this.#internals.ariaRole = "checkbox";
+		
+		let link = document.createElement('link');
+		link.href = "./toggle.css";
+		link.rel = "stylesheet";
+		link.type = "text/css";
+		this.#shadowRoot.appendChild(link);
 		
 		this.#toggle = document.createElement('label');
 		this.#toggle.classList.add("exo");
