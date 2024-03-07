@@ -73,6 +73,7 @@
 		align-self: center;
 		--toggle-highlight-color: #000;
 		--toggle-fg-color: #fcfff4;
+		--box-shadow: initial;
 		cursor: pointer;
 	}
 	#disTick::part(exo) {
@@ -80,16 +81,16 @@
 		box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
 	}
 	#disTick::part(endo) {
-		box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,1); 
+		box-shadow: var(--box-shadow, inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,1)); 
 		background: linear-gradient(to top, #165273 0%, #33a1de 100%);
 	}	
-	#disTick::part(endo):hover, /* We overrode the Tick box-shadow above so now must also control highlighting. */
-	#disTick::part(endo):focus {
+	#disTick::part(endo):hover { /* We overrode the Tick box-shadow above so now must also control highlighting. */
 		box-shadow: 0 0 0.2em black;
 	}
 	#disTick:focus {
 		outline: none;
-		box-shadow: 0 0 0.2em black;
+		border: none;
+		--box-shadow: 0 0 0.2em black; 
 	}
 	#myToggle[disabled="true"] {
 		opacity: .6;

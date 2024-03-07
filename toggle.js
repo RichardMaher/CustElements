@@ -14,7 +14,7 @@ export class ABCToggle extends HTMLElement
     constructor() {
         super();
 
-        this.#shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
+        this.#shadowRoot = this.attachShadow({ mode: 'open'});
 //		this.#shadowRoot.adoptedStyleSheets = [sheet];	
 		this.#internals = this.attachInternals();
 		this.#internals.ariaRole = "checkbox";
