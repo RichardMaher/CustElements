@@ -1,5 +1,3 @@
-// import sheet from './toggle.css' assert {type: 'css'};
-
 export class ABCToggle extends HTMLElement 
 {
 	static formAssociated = true;
@@ -14,8 +12,7 @@ export class ABCToggle extends HTMLElement
     constructor() {
         super();
 
-        this.#shadowRoot = this.attachShadow({ mode: 'open'});
-//		this.#shadowRoot.adoptedStyleSheets = [sheet];	
+        this.#shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
 		this.#internals = this.attachInternals();
 		this.#internals.ariaRole = "checkbox";
 		
@@ -114,12 +111,26 @@ export class ABCToggle extends HTMLElement
 			});
 		
 		this.#toggle.addEventListener('click', (e) => {
-				console.log("Inside " + this.#checkbox.checked + " " + e.target.tagName);
+				var trueTarget = null;
+				switch	(true) {
+					case	(e.target.tagName == "INPUT"):
+							trueTarget = e.target;
+							break;
+					case	(e.currentTarget.tagName == "INPUT"):
+							trueTarget = e.currentTarget;
+							break;
+					case	(e.originalTarget != undefined && e.originalTarget.tagName == "INPUT"):
+							trueTarget = e.originalTarget;
+							break;
+					default:
+				}
 
-				if (e.target.tagName == "LABEL") {
+				if (trueTarget == null) {
 					e.stopPropagation();
 					return;
 				}
+				
+				console.log("Inside " + this.#checkbox.checked + " " + trueTarget.tagName);
 
 				this.setAttribute("checked", this.#checkbox.checked);
 				this.setAttribute("aria-checked", this.#checkbox.checked);
