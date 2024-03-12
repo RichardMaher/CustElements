@@ -144,7 +144,8 @@
 									myToggle.disabled=false;
 							});
 							
-				document.body.addEventListener("change", (e) => {console.log("****"+e.target.tagName);});
+				document.body.addEventListener("input", (e) => {console.log("****"+e.target.tagName+e.type);});
+				document.body.addEventListener("click", (e) => {console.log("%%%%"+e.target.tagName+e.type);});
 			});
 
 </script>

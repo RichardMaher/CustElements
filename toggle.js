@@ -110,7 +110,7 @@ export class ABCToggle extends HTMLElement
 				}
 			});
 		
-		this.#toggle.addEventListener('click', (e) => {
+		this.#checkbox.addEventListener('click', (e) => {
 				var trueTarget = null;
 				switch	(true) {
 					case	(e.target.tagName == "INPUT"):
@@ -134,6 +134,9 @@ export class ABCToggle extends HTMLElement
 
 				this.setAttribute("checked", this.#checkbox.checked);
 				this.setAttribute("aria-checked", this.#checkbox.checked);
+				
+				e.stopPropagation();
+				this.#toggle.click();	  // Force FireFox to bubble a Click as well as an Input
 			})
 						
 		this.#shadowRoot.appendChild(this.#toggle);	 		
@@ -170,7 +173,7 @@ export class ABCToggle extends HTMLElement
 			resultIndex = resultIndex == null ? labelAfter.zIndex : (Math.max(resultIndex, labelAfter.zIndex));
 		}
 		
-		var sliderIndex = resultIndex == null ? "auto" : resultIndex + 1; 
+		var sliderIndex = resultIndex == null ? 2 : resultIndex + 1; 
 		
 		label.style.setProperty("--switch-z-index", sliderIndex);
     }
