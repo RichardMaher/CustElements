@@ -94,7 +94,7 @@ export class ABCToggle extends HTMLElement
 			
 			if (e.keyCode == 32 || e.keyCode == 13)
 			{
-				e.preventDefault();
+				e.preventDefault(); // NB: This will prevet click event and form submission
 			}
 		});
 		
@@ -106,11 +106,14 @@ export class ABCToggle extends HTMLElement
 				{
 					console.log("key = " + e.keyCode);
 					e.preventDefault();
-					this.#toggle.click();	
+					this.#checkbox.click();
 				}
 			});
 		
-		this.#checkbox.addEventListener('click', (e) => {
+		this.addEventListener('click', (e) => {
+			console.log("SR click");
+		});
+		this.#toggle.addEventListener('click', (e) => {				
 				var trueTarget = null;
 				switch	(true) {
 					case	(e.target.tagName == "INPUT"):
@@ -131,12 +134,9 @@ export class ABCToggle extends HTMLElement
 				}
 				
 				console.log("Inside " + this.#checkbox.checked + " " + trueTarget.tagName);
-
-				this.setAttribute("checked", this.#checkbox.checked);
-				this.setAttribute("aria-checked", this.#checkbox.checked);
 				
-				e.stopPropagation();
-				this.#toggle.click();	  // Force FireFox to bubble a Click as well as an Input
+				this.setAttribute("checked", this.#checkbox.checked);
+				this.setAttribute("aria-checked", this.#checkbox.checked);				
 			})
 						
 		this.#shadowRoot.appendChild(this.#toggle);	 		
@@ -243,5 +243,8 @@ export class ABCToggle extends HTMLElement
     set value(newValue) {
         this.setAttribute("value", newValue);
     }
+	get form() { 
+		return this.#internals.form; 
+	}
 }
 customElements.define('abc-toggle', ABCToggle);
