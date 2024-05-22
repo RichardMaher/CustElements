@@ -1,8 +1,8 @@
-:host([disabled="false"]) {
+:host:not([disabled]) {
   --ponter-events: auto;
 }
 
-:host([disabled="true"]) {
+:host([disabled]) {
   --pointer-events: none;
 }
 
@@ -95,8 +95,9 @@ input:focus + .endo.tick {
   box-shadow: 0 0 0.5em var(--toggle-highlight-color, rgba(0,0,0,0)); 
 }
 
-input:focus {
+:host(:focus) {
   outline: none;
+  border: none;
 }
 
 input[type=checkbox]:checked + .endo.toggle:after {

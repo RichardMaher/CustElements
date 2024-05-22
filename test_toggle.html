@@ -14,7 +14,7 @@
 		justify-content: flex-start;
 		align-items: center;
         margin: 0px;
-        font-size: 12px;
+        font-size: 14px;
 		background-color: lightblue;
         overscroll-behavior: none;
         pointer-events: auto;
@@ -37,10 +37,10 @@
 		--toggle-highlight-color: #2099f4;
 		cursor: pointer;
 	}
-	#myToggle[checked="true"] {
+	#myToggle:checked{
 		--toggle-bg-color: #2099f4;
 	}
-	#myToggle[disabled="true"] {
+	#myToggle:disabled {
 		opacity: .6;
 		cursor: not-allowed;
 		--toggle-highlight-color: rgba(0,0,0,0);
@@ -92,11 +92,6 @@
 		border: none;
 		--box-shadow: 0 0 0.2em black; 
 	}
-	#myToggle[disabled="true"] {
-		opacity: .6;
-		cursor: not-allowed;
-		--toggle-highlight-color: rgba(0,0,0,0);
-	}	
 	#tickContainer {
 		display: inline-flex;
 		font-size: 0.8em;
@@ -163,14 +158,14 @@
 <body onload="load()">
 	<h1>Toggle Web Component Demo</h1>
 	<div id="container">
-		<abc-toggle id="myToggle" name="myToggle" checked="true" tabindex=0 
+		<abc-toggle id="myToggle" name="myToggle" checked tabindex=0 
 					type="toggle" aria-label="useless toggle" value="payload">
 		</abc-toggle>
 	</div>
 	<div id="disableIt">
 		<label for="disTick">Disable Toggle&nbsp;</label>
 		<div id="tickContainer">
-			<abc-toggle id="disTick" name="disTick" checked="false" tabindex=0 type="tick"></abc-toggle>
+			<abc-toggle id="disTick" name="disTick" checked tabindex=0 type="tick"></abc-toggle>
 		</div>
 	</div>
 	<div id="clickStatus">

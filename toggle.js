@@ -49,33 +49,21 @@ export class ABCToggle extends HTMLElement
 		}
 		this.#toggle.classList.add(this.#typeClass);
 		span.classList.add(this.#typeClass);
-		
-		if (this.hasAttribute("checked")) 
+
+		this.initialState = this.hasAttribute("checked");		
+		if (this.initialState) 
 		{
-			let checked = this.getAttribute("checked");
-			this.#checkbox.checked  = (String(checked).toLowerCase() === "true");
-		}
-		else
-		{
-			this.setAttribute("checked", false);
-			this.#checkbox.checked = false;
+			this.#checkbox.setAttribute("checked", "true");
 		}
 		
-		this.initialState = this.#checkbox.checked;
-		this.setAttribute("aria-checked", this.#checkbox.checked);
+		this.setAttribute("aria-checked", this.initialState);
 		
 		if (this.hasAttribute("disabled")) 
 		{
-			let disabled = this.getAttribute("disabled");
-			this.#checkbox.disabled  = (String(disabled).toLowerCase() === "true");
-		}
-		else
-		{
-			this.setAttribute("disabled", false);
-			this.#checkbox.disabled = false;
+			this.#checkbox.setAttribute("disabled", "true");
 		}
 		
-		this.setAttribute("aria-disabled", this.#checkbox.disabled);
+		this.setAttribute("aria-disabled", this.hasAttribute("disabled"));
 		
 		let value = "";
 		if (this.hasAttribute("value")) 
@@ -110,11 +98,10 @@ export class ABCToggle extends HTMLElement
 				}
 			});
 		
-		this.addEventListener('click', (e) => {
-			console.log("SR click");
-		});
 		this.#toggle.addEventListener('click', (e) => {				
-				var trueTarget = null;
+                        console.warn(e.target.nodeName, e.composedPath());
+                        console.warn(e.target?.tagName, e.currentTarget?.tagName, e.originalTarget?.tagName);
+				let trueTarget = null;
 				switch	(true) {
 					case	(e.target.tagName == "INPUT"):
 							trueTarget = e.target;
@@ -135,11 +122,12 @@ export class ABCToggle extends HTMLElement
 				
 				console.log("Inside " + this.#checkbox.checked + " " + trueTarget.tagName);
 				
-				this.setAttribute("checked", this.#checkbox.checked);
+				this.checked = this.#checkbox.checked ? true : false;
+
 				this.setAttribute("aria-checked", this.#checkbox.checked);				
 			})
 						
-		this.#shadowRoot.appendChild(this.#toggle);	 		
+		this.#shadowRoot.appendChild(this.#toggle);	 
     }
 
     static get observedAttributes() {
@@ -157,11 +145,11 @@ export class ABCToggle extends HTMLElement
 		
 		this.#shadowRoot.host.style.setProperty('--default-toggle-bg-color', parentStyle.color);
 		
-		var label = this.#shadowRoot.querySelector("label.exo");
-		var labelBefore = getComputedStyle(label, "before");
-		var labelAfter  = getComputedStyle(label, "after");
+		let label = this.#shadowRoot.querySelector("label.exo");
+		let labelBefore = getComputedStyle(label, "before");
+		let labelAfter  = getComputedStyle(label, "after");
 		
-		var resultIndex = null;
+		let resultIndex = null;
 		
 		if (!isNaN(labelBefore.zIndex))
 		{
@@ -173,7 +161,7 @@ export class ABCToggle extends HTMLElement
 			resultIndex = resultIndex == null ? labelAfter.zIndex : (Math.max(resultIndex, labelAfter.zIndex));
 		}
 		
-		var sliderIndex = resultIndex == null ? 2 : resultIndex + 1; 
+		let sliderIndex = resultIndex == null ? 2 : resultIndex + 1; 
 		
 		label.style.setProperty("--switch-z-index", sliderIndex);
     }
@@ -186,17 +174,17 @@ export class ABCToggle extends HTMLElement
         if (!this.isConnected) return;
 		
 		console.log("Change " + name + " value " + newValue);
-			
-        if (newValue == null) {
-            this[name] = "";
-            delete this[name];
-            return;
-        }
 
 		switch	(name) {
 			case	"checked":
-				break;
 			case	"disabled":
+				if (this.hasAttribute(name)) {
+					this.#checkbox[name] = newValue;
+					this.setAttribute("aria-"+name, "true");
+				} else {
+					this.#checkbox.removeAttribute(name);
+					this.setAttribute("aria-"+name, "false");
+				}
 				break;
 			case	"value":
 				this.#internals.setFormValue(newValue);
@@ -213,36 +201,54 @@ export class ABCToggle extends HTMLElement
 			default:
 				throw new Error("Unknown attribute modified " + name);
 		}
+					
+        if (newValue == null) {
+            this[name] = "";
+            delete this[name];
+            return;
+        }
 	}
 	
 	formResetCallback() {
-		this.setAttribute("checked", this.#initialState);
+		if (this.#initialState) {
+			this.setAttribute("checked", this.#initialState);
+		} else {
+			this.removeAttribute("checked");
+		}
 	}
 
     get checked() {
-        return this.#checkbox.checked;
+        return this.hasAttribute("checked");
     }
+	
     set checked(newValue) {
-		this.#checkbox.checked = (String(newValue).toLowerCase() === "true");
-        this.setAttribute("checked", this.#checkbox.checked);
-        this.setAttribute("aria-checked", this.#checkbox.checked);
+		if (String(newValue).toLowerCase() !== "true") {
+			this.removeAttribute("checked")
+		} else {
+			this.setAttribute("checked", "true");
+		}
     }
-
+	
     get disabled() {
-        return this.#checkbox.disabled;
+        return this.hasAttribute("disabled");
     }
+	
     set disabled(newValue) {
-		this.#checkbox.disabled = (String(newValue).toLowerCase() === "true");
-        this.setAttribute("disabled", this.#checkbox.disabled);
-        this.setAttribute("aria-disabled", this.#checkbox.disabled);
+		if (String(newValue).toLowerCase() !== "true") {
+			this.removeAttribute("disabled")
+		} else {
+			this.setAttribute("disabled", "true");
+		}
     }
 
     get value() {
         return this.getAttribute("value");
     }
+	
     set value(newValue) {
         this.setAttribute("value", newValue);
     }
+	
 	get form() { 
 		return this.#internals.form; 
 	}
