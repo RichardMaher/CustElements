@@ -127,7 +127,11 @@ export class ABCToggle extends HTMLElement
 				this.setAttribute("aria-checked", this.#checkbox.checked);				
 			})
 						
-		this.#shadowRoot.appendChild(this.#toggle);	 
+		this.#shadowRoot.appendChild(this.#toggle);	
+		this.#shadowRoot.host.addEventListener("click", (e) => {
+			if (e.composedPath()[0] != this.#checkbox)
+				this.#toggle.click();
+		});
     }
 
     static get observedAttributes() {
