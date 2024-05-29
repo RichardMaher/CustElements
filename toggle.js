@@ -2,7 +2,6 @@ export class ABCToggle extends HTMLElement
 {
 	static formAssociated = true;
 	
-	#shadowRoot;
 	#internals;
 	#toggle;
 	#checkbox;
@@ -12,7 +11,7 @@ export class ABCToggle extends HTMLElement
     constructor() {
         super();
 
-        this.#shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
+        this.attachShadow({ mode: 'open', delegatesFocus: true });
 		this.#internals = this.attachInternals();
 		this.#internals.ariaRole = "checkbox";
 		
@@ -20,7 +19,7 @@ export class ABCToggle extends HTMLElement
 		link.href = "./toggle.css";
 		link.rel = "stylesheet";
 		link.type = "text/css";
-		this.#shadowRoot.appendChild(link);
+		this.shadowRoot.appendChild(link);
 		
 		this.#toggle = document.createElement('label');
 		this.#toggle.classList.add("exo");
@@ -53,14 +52,14 @@ export class ABCToggle extends HTMLElement
 		this.initialState = this.hasAttribute("checked");		
 		if (this.initialState) 
 		{
-			this.#checkbox.setAttribute("checked", "true");
+			this.#checkbox.setAttribute("checked", "");
 		}
 		
 		this.setAttribute("aria-checked", this.initialState);
 		
 		if (this.hasAttribute("disabled")) 
 		{
-			this.#checkbox.setAttribute("disabled", "true");
+			this.#checkbox.setAttribute("disabled", "");
 		}
 		
 		this.setAttribute("aria-disabled", this.hasAttribute("disabled"));
@@ -99,8 +98,7 @@ export class ABCToggle extends HTMLElement
 			});
 		
 		this.#toggle.addEventListener('click', (e) => {				
-                        console.warn(e.target.nodeName, e.composedPath());
-                        console.warn(e.target?.tagName, e.currentTarget?.tagName, e.originalTarget?.tagName);
+
 				let trueTarget = null;
 				switch	(true) {
 					case	(e.target.tagName == "INPUT"):
@@ -122,16 +120,28 @@ export class ABCToggle extends HTMLElement
 				
 				console.log("Inside " + this.#checkbox.checked + " " + trueTarget.tagName);
 				
-				this.checked = this.#checkbox.checked ? true : false;
-
-				this.setAttribute("aria-checked", this.#checkbox.checked);				
+				if (this.hasAttribute("disabled")) {
+					e.stopPropagation();
+					e.preventDefault();
+					return;
+				}
+				
+				if (this.#checkbox.checked) {
+					this.setAttribute("checked","");
+				} else {
+					this.removeAttribute("checked");
+				}
 			})
 						
-		this.#shadowRoot.appendChild(this.#toggle);	
-		this.#shadowRoot.host.addEventListener("click", (e) => {
-			if (e.composedPath()[0] != this.#checkbox)
+		this.shadowRoot.host.addEventListener("click", (e) => {
+			if (e.composedPath()[0] != this.#checkbox) {
+				e.stopPropagation();
+				e.preventDefault();
 				this.#toggle.click();
+			}
 		});
+		
+		this.shadowRoot.appendChild(this.#toggle);	
     }
 
     static get observedAttributes() {
@@ -142,14 +152,14 @@ export class ABCToggle extends HTMLElement
 
         if (!this.isConnected) return;
 		
-		let parentStyle = getComputedStyle(this.#shadowRoot.host);
+		let parentStyle = getComputedStyle(this.shadowRoot.host);
 		
 		if (parentStyle.backgroundColor.replace(/ /g,"") != "rgba(0,0,0,0)")
-			this.#shadowRoot.host.style.setProperty('--default-toggle-fg-color', parentStyle.backgroundColor);
+			this.shadowRoot.host.style.setProperty('--default-toggle-fg-color', parentStyle.backgroundColor);
 		
-		this.#shadowRoot.host.style.setProperty('--default-toggle-bg-color', parentStyle.color);
+		this.shadowRoot.host.style.setProperty('--default-toggle-bg-color', parentStyle.color);
 		
-		let label = this.#shadowRoot.querySelector("label.exo");
+		let label = this.shadowRoot.querySelector("label.exo");
 		let labelBefore = getComputedStyle(label, "before");
 		let labelAfter  = getComputedStyle(label, "after");
 		
@@ -181,12 +191,19 @@ export class ABCToggle extends HTMLElement
 
 		switch	(name) {
 			case	"checked":
+				if (this.hasAttribute(name)) {
+					this.setAttribute("aria-"+name, "true");
+				} else {
+					this.setAttribute("aria-"+name, "false");
+				}
+				break;
 			case	"disabled":
 				if (this.hasAttribute(name)) {
-					this.#checkbox[name] = newValue;
+					this.#checkbox.disabled = true;
 					this.setAttribute("aria-"+name, "true");
 				} else {
 					this.#checkbox.removeAttribute(name);
+					this.#checkbox.disabled = false;
 					this.setAttribute("aria-"+name, "false");
 				}
 				break;
@@ -199,18 +216,12 @@ export class ABCToggle extends HTMLElement
 				}
 				
 				this.#internals.setValidity({badInput: true}, 
-					'Invalid Value', this.#shadowRoot.querySelector("span"));
+					'Invalid Value', this.shadowRoot.querySelector("span"));
 				this.#internals.reportValidity();
 				break;
 			default:
 				throw new Error("Unknown attribute modified " + name);
 		}
-					
-        if (newValue == null) {
-            this[name] = "";
-            delete this[name];
-            return;
-        }
 	}
 	
 	formResetCallback() {
@@ -227,9 +238,11 @@ export class ABCToggle extends HTMLElement
 	
     set checked(newValue) {
 		if (String(newValue).toLowerCase() !== "true") {
-			this.removeAttribute("checked")
+			this.removeAttribute("checked");
+			this.#checkbox.removeAttribute("checked");
 		} else {
-			this.setAttribute("checked", "true");
+			this.setAttribute("checked", "");
+			this.#checkbox.setAttribute("checked", "")
 		}
     }
 	
@@ -241,7 +254,7 @@ export class ABCToggle extends HTMLElement
 		if (String(newValue).toLowerCase() !== "true") {
 			this.removeAttribute("disabled")
 		} else {
-			this.setAttribute("disabled", "true");
+			this.setAttribute("disabled", "");
 		}
     }
 
